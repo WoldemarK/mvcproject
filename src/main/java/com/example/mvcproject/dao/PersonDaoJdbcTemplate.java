@@ -1,11 +1,15 @@
 package com.example.mvcproject.dao;
+
 import com.example.mvcproject.PersonMapper.PersonMapper;
 import com.example.mvcproject.madel.Person;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
 import java.util.List;
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class PersonDaoJdbcTemplate {
@@ -15,6 +19,7 @@ public class PersonDaoJdbcTemplate {
     private static final String SQL_GET_PERSON_BY_ID = "select * from person where id =?";
     private static final String SQL_UPDATE_PERSON = "update person set name=?, age=?, email=? where id=?";
     private static final String SQL_DELETE_PERSON_BY_ID = "delete from person where id=?";
+    private static final String SQL_GET_EMAIL = "select * from person where email=?";
 
     public List<Person> index() {
         return jdbcTemplate.query(SQL_GET_ALL_PERSON, new PersonMapper());
@@ -48,5 +53,12 @@ public class PersonDaoJdbcTemplate {
 
     public void delete(int id) {
         jdbcTemplate.update(SQL_DELETE_PERSON_BY_ID, id);
+    }
+
+    public Optional<Person> show(String email) {
+        return jdbcTemplate.query(SQL_GET_EMAIL, new Object[]{email},
+                        new BeanPropertyRowMapper<>(Person.class))
+                .stream()
+                .findAny();
     }
 }

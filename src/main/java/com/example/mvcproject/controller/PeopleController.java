@@ -1,6 +1,8 @@
 package com.example.mvcproject.controller;
+
 import com.example.mvcproject.dao.PersonDaoJdbcAip;
 import com.example.mvcproject.madel.Person;
+import com.example.mvcproject.util.PersonValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 @RequestMapping("/people")
 public class PeopleController {
     private final PersonDaoJdbcAip personDAOJDBCAIP;
+    private final PersonValidator validator;
 
     @GetMapping()
     public String index(Model model) {
@@ -32,15 +35,18 @@ public class PeopleController {
         return "people/new";
     }
 
-   @PostMapping()
-   public String create(@ModelAttribute("person") @Valid Person person,
-                        BindingResult bindingResult) {
-       if (bindingResult.hasErrors())
-           return "people/new";
+    @PostMapping()
+    public String create(@ModelAttribute("person") @Valid Person person,
+                         BindingResult bindingResult) {
 
-       personDAOJDBCAIP.save(person);
-       return "redirect:/people";
-   }
+        validator.validate(person, bindingResult);
+
+        if (bindingResult.hasErrors())
+            return "people/new";
+
+        personDAOJDBCAIP.save(person);
+        return "redirect:/people";
+    }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
@@ -51,6 +57,9 @@ public class PeopleController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
                          @PathVariable("id") int id) {
+
+        validator.validate(person, bindingResult);
+
         if (bindingResult.hasErrors())
             return "people/edit";
 
