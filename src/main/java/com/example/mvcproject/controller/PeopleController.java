@@ -1,5 +1,5 @@
 package com.example.mvcproject.controller;
-import com.example.mvcproject.dao.PersonDAO;
+import com.example.mvcproject.dao.PersonDaoJdbcAip;
 import com.example.mvcproject.madel.Person;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,17 +13,17 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/people")
 public class PeopleController {
-    private final PersonDAO personDAO;
+    private final PersonDaoJdbcAip personDAOJDBCAIP;
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("people", personDAO.index());
+        model.addAttribute("people", personDAOJDBCAIP.index());
         return "people/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("person", personDAO.show(id));
+        model.addAttribute("person", personDAOJDBCAIP.show(id));
         return "people/show";
     }
 
@@ -38,13 +38,13 @@ public class PeopleController {
        if (bindingResult.hasErrors())
            return "people/new";
 
-       personDAO.save(person);
+       personDAOJDBCAIP.save(person);
        return "redirect:/people";
    }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("person", personDAO.show(id));
+        model.addAttribute("person", personDAOJDBCAIP.show(id));
         return "people/edit";
     }
 
@@ -54,13 +54,13 @@ public class PeopleController {
         if (bindingResult.hasErrors())
             return "people/edit";
 
-        personDAO.update(id, person);
+        personDAOJDBCAIP.update(id, person);
         return "redirect:/people";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        personDAO.delete(id);
+        personDAOJDBCAIP.delete(id);
         return "redirect:/people";
     }
 }
