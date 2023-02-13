@@ -42,6 +42,7 @@ public class PersonDaoJdbcAip {
 
             while (resultSet.next()) {
                 var person = Person.builder()
+
                         .id(resultSet.getInt("id"))
                         .name(resultSet.getString("name"))
                         .email(resultSet.getString("email"))
