@@ -1,5 +1,6 @@
 package com.example.mvcproject.madel;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
+@Builder
 public class Person {
     private int id;
     @NotEmpty(message = "Name should not be empty")
