@@ -11,7 +11,6 @@ import org.springframework.validation.Validator;
 @RequiredArgsConstructor
 public class PersonValidator implements Validator {
     private final PersonDaoJdbcTemplate personDaoJdbcTemplate;
-
     @Override
     public boolean supports(Class<?> aClazz) {
         return Person.class.equals(aClazz);
